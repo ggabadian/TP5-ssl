@@ -31,23 +31,23 @@ bloqueCodigo		: bloqueCodigo sentencia ';'
 			| sentencia ';'
 			;
 sentencia		: LEER '(' listaIdentificadores ')'
-			| ESCRIBIR '(' listaExpresiones ')' {printf("Escribir\n");}
-			| IDENTIFICADOR ASIGNACION expresion {printf("Asignacion\n");}
+			| ESCRIBIR '(' listaExpresiones ')'
+			| IDENTIFICADOR ASIGNACION expresion {asignacion($3,$1);}
 			| error
 			;
-listaIdentificadores	: listaIdentificadores ',' IDENTIFICADOR
+listaIdentificadores	: listaIdentificadores ',' IDENTIFICADOR {leer($3);}
 			| IDENTIFICADOR {leer($1);}
 			;
-listaExpresiones	: expresion ',' listaExpresiones
-			| expresion 
+listaExpresiones	: expresion ',' listaExpresiones {escribir($1);}
+			| expresion {escribir($1);}
 			;
-expresion		: expresion '+' expresion {printf("Suma\n");}
-			| expresion '-' expresion {printf("Resta\n");}
-			| expresion '*' expresion {printf("Multiplicacion\n");}
-			| expresion '/' expresion {printf("Division\n");}
+expresion		: expresion '+' expresion {$$=strdup(generarInfijo($1,"ADD",$3));}
+			| expresion '-' expresion {$$=strdup(generarInfijo($1,"SUBS",$3));}
+			| expresion '*' expresion {$$=strdup(generarInfijo($1,"MULT",$3));}
+			| expresion '/' expresion {$$=strdup(generarInfijo($1,"DIV",$3));}
 			| '-' expresion %prec NEG {$$=strdup(invertir($2));}
 			| IDENTIFICADOR {verificarID($1);}
 			| CONSTANTE
-			| '(' expresion ')' {printf("Paréntesis\n");}
+			| '(' expresion ')' {$$=strdup($2);}
 			;
 %%

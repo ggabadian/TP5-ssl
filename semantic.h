@@ -3,5 +3,10 @@
 
 void inicio();
 void fin();
-void leer(char *id);
+void leer(char*);
+void escribir(char*);
+char* invertir(char*);
+char* nuevoTemp(void);
+char* generarInfijo(char*, char*, char*);
+char* asignacion(char*, char*);
 #endif
