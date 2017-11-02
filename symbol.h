@@ -8,6 +8,6 @@ void agregarAlDiccionario(char*);
 int estaDeclarada(char*);
 
 void agregar(char*);
-void verificarID(char *id);
+int verificarID(char *id);
 
 #endif

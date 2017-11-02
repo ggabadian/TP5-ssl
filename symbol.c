@@ -40,10 +40,14 @@ void agregar (char* id){
 	}
 }
 
-void verificarID(char *id){
+int verificarID(char *id){
 	if(!estaDeclarada(id)){
 		sprintf(buffer,"Error semántico: identificador %s NO declarado",id);
 		yyerror(buffer);
 		nerrsem++;
+		return 0;
+	}
+	else {
+		return 1;
 	}
 }

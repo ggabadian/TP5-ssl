@@ -32,22 +32,23 @@ bloqueCodigo		: bloqueCodigo sentencia ';'
 			;
 sentencia		: LEER '(' listaIdentificadores ')'
 			| ESCRIBIR '(' listaExpresiones ')'
-			| IDENTIFICADOR ASIGNACION expresion {asignacion($3,$1);}
+			| id ASIGNACION expresion {asignacion($3,$1);}
 			| error
 			;
-listaIdentificadores	: listaIdentificadores ',' IDENTIFICADOR {leer($3);}
-			| IDENTIFICADOR {leer($1);}
+listaIdentificadores	: listaIdentificadores ',' id {leer($3);}
+			| id {leer($1);}
 			;
 listaExpresiones	: expresion ',' listaExpresiones {escribir($1);}
 			| expresion {escribir($1);}
 			;
-expresion		: expresion '+' expresion {$$=strdup(generarInfijo($1,"ADD",$3));}
-			| expresion '-' expresion {$$=strdup(generarInfijo($1,"SUBS",$3));}
-			| expresion '*' expresion {$$=strdup(generarInfijo($1,"MULT",$3));}
-			| expresion '/' expresion {$$=strdup(generarInfijo($1,"DIV",$3));}
-			| '-' expresion %prec NEG {$$=strdup(invertir($2));}
-			| IDENTIFICADOR {verificarID($1);}
+expresion		: expresion '+' expresion {$$=generarInfijo($1,"ADD",$3);}
+			| expresion '-' expresion {$$=generarInfijo($1,"SUBS",$3);}
+			| expresion '*' expresion {$$=generarInfijo($1,"MULT",$3);}
+			| expresion '/' expresion {$$=generarInfijo($1,"DIV",$3);}
+			| '-' expresion %prec NEG {$$=invertir($2);}
+			| id
 			| CONSTANTE
-			| '(' expresion ')' {$$=strdup($2);}
+			| '(' expresion ')' {$$=$2;}
 			;
+id			: IDENTIFICADOR {if(!verificarID($1))	YYERROR;}
 %%
